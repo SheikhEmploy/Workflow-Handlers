@@ -9,15 +9,16 @@ jobs:
   run-batches:
     runs-on: ubuntu-latest
 
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: 'ap-southeast-2'
-      # Add other secrets here as needed
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
+          aws-region: 'ap-southeast-2'
+          audience: sts.amazonaws.com
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -31,7 +32,7 @@ jobs:
       # Main batch loop: runs the script for all 148 batches
       - name: Run batches
         run: |
-          for i in $(seq 13 15); do
+          for i in $(seq 13 14); do
             echo "Processing batch $i/148"
             python republish_trigger.py --batch-index $i --batch-size 100
             sleep 120  # Delay between batches to avoid throttling (adjust as needed)
