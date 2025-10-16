@@ -32,8 +32,9 @@ jobs:
       - name: Run batches
         run: |
           for i in $(seq 14 15); do
-            echo "Processing batch $i/148"
+            echo "Processing batch $i/148 at $(date)"
             python republish_trigger.py --batch-index $i --batch-size 100
+            echo "Finished batch $i at $(date)"
             sleep 120  # Delay between batches to avoid throttling (adjust as needed)
           done
 
