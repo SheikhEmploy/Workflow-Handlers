@@ -31,7 +31,7 @@ jobs:
       # Main batch loop: runs the script for all 148 batches
       - name: Run batches
         run: |
-          for i in $(seq 16 30); do
+          for i in $(seq 31 50); do
             echo "Processing batch $i/148 at $(date)"
             python republish_trigger.py --batch-index $i --batch-size 100
             echo "Finished batch $i at $(date)"
